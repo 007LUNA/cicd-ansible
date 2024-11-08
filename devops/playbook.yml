@@ -6,10 +6,10 @@
     IMAGE_NAME: "{{ image_name }}"
     DOCKERHUB_USERNAME: "{{ dockerhub_username }}"
     DOCKERHUB_TOKEN: "{{ dockerhub_token }}"
-    DOMAIN_NAME: "{{ domain_name }}"
+    DOMAIN_NAME: "{{ domain_name }}" #mikelab.thixpin.me
     NGINX_CONFIG_FILE: /etc/nginx/sites-available/{{ DOMAIN_NAME }}.conf
     NGINX_ENABLED_FILE: /etc/nginx/sites-enabled/{{ DOMAIN_NAME }}.conf
-    ENABLE_SSL: "{{ enable_ssl }}"
+    ENABLE_SSL: if "{{ enable_ssl }}" == "true" else false
     APP_PORT: 3000
     tasks:
 
