@@ -21,11 +21,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
       - name: Login to DockerHub
-        uses: |
+        run: |
           echo DOCKERHUB_TOKEN | docker login -u DOCKERHUB_USERNAME --passwd-sdtin
+      
       - name: Build Docker image
         run: docker build -t $IMAGE_NAME:latest .
+      
       - name: Push Docker image
         run: docker push $IMAGE_NAME:latest
 
