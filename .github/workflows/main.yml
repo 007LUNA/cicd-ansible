@@ -46,7 +46,8 @@ jobs:
           echo "$SSH_PRIVATE_KEY " > private.key
           chmod 600 private.key
           eval 'ssh-agent -s'
-          ssh-add private.keymkdir -p ~/.ssh
+          ssh-add private.key
+          mkdir -p ~/.ssh
           touch ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts\
           ssh-keyscan $SSH_HOST >>~/.ssh/known_hosts
