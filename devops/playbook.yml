@@ -1,0 +1,112 @@
+---
+- name: Deploy Netxt.js DOcker container
+  hosts: all
+  become: yes #run as Root
+  vars: 
+    IMAGE_NAME: "{{ image_name }}"
+    DOCKERHUB_USERNAME: "{{ dockerhub_username }}"
+    DOCKERHUB_TOKEN: "{{ dockerhub_token }}"
+    DOMAIN_NAME: "{{ domain_name }}"
+    NGINX_CONFIG_FILE: /etc/nginx/sites-available/{{ DOMAIN_NAME }}.conf
+    NGINX_ENABLED_FILE: /etc/nginx/sites-enabled/{{ DOMAIN_NAME }}.conf
+    ENABLE_SSL: "{{ enable_ssl }}"
+    APP_PORT: 3000
+    tasks:
+
+      - name: Configure swap
+        include_role:
+          name: geerlingguy.swap
+        vars:
+          swap_file_size_mb: 1024
+          swap_swappiness: 10
+            
+      - name: APT update
+        apt: 
+          update_cache: yes
+
+      - name: Install DOcker
+        apt:
+          name: docker.io
+          state: present
+
+      - name: Start Docker service
+        service:
+          state: started
+          enabled: yes
+      
+      - name: Install Nginx
+        apt:
+          name: Nginx
+          state: present
+
+      - name: Enable and start Nginx
+        service:
+          name: nginx
+          state: started
+          enabled: yes
+      
+      - name: Install Certbot and Nginx plugin
+        apt:
+          name: "{{ item }}"
+          state: present
+        when: ENABLE_SSL
+        with_items:
+            - certbot
+            - python3-certbot-nginx
+      
+      - name: Login to DockerHub with dh_token
+        docker_login:
+          username: "{{ DOCKERHUB_USERNAME }}"
+          password: "{{ DOCKERHUB_TOKEN }}"
+      
+      - name: Pull Docker image_name
+        docker_image:
+          name: "{{ IMAGE_NAME }}"
+          source: pull
+      
+      - name: Run Docker container
+        docker_container:
+          name: "{{ DOMAIN_NAME }}"
+          image: "{{ IMAGE_NAME }}"
+          state: started
+          restart_policy: always
+          ports:
+            - "{{ APP_PORT }}:3000"
+          env:
+            - NODE_ENV=prodution
+            - PORT=3000
+      - name: Wit for Docker container to start
+        wait_for:
+          host: localhost
+          port: "{{ APP_PORT }}"
+          delay: 5
+          timeout: 60
+
+      - name: Check if Nginx configuratoin exists
+        stat:
+          path: "{{ NGINX_CONFIG_FILE }}"
+          
+
+      - name: Nginx configureation
+        template:
+          src: nginx.conf.j2
+          dest: "{{ NGINX_CONFIG_FILE }}"
+        when: not nginx_config.stat.exists
+
+      - name: Enable Nginx configuration
+        file:
+          src: "{{ NGINX_CONFIG_FILE }}"
+          dest: "{{ NGINX_ENABLED_FILE }}"
+          state: link
+        when: not nginx_config,stat.exits
+        notify: Restart Nginx
+      
+      - name: Install SSL certificate
+        command: "certbot --nginx -d {{ DOMAIN_NAME }} -n --agree-tos --email {{ email }}"
+        when: ENABLE_SSL
+         
+    handlers:
+      - name: Restart Nginx
+        service:
+          name: nginx
+          state: reloaded
