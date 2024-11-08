@@ -24,7 +24,7 @@ jobs:
 
       - name: Login to DockerHub
         run: |
-          echo $DOCKERHUB_TOKEN | docker login -u $DOCKERHUB_USERNAME --passwd-sdtin
+          echo $DOCKERHUB_TOKEN | docker login -u $DOCKERHUB_USERNAME --password-sdtin
 
       - name: Build and push Docker images
         uses: docker/build-push-action@v6.9.0
