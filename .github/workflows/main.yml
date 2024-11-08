@@ -46,6 +46,8 @@ jobs:
         run: |
           echo "$SSH_PRIVATE_KEY " > private.key
           chmod 600 private.key
+          eval 'ssh-agent -s'
+          ssh-add private.key
           mkdir -p ~/.ssh
           touch ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
@@ -66,10 +68,10 @@ jobs:
 
       - name: Run Ansible playbook
         run: |
-          ansible-playbook -i inventory\
-            --extra-vars "image_name=$IMAGE_NAME"\
-            --extra-vars "domain_name=$DOMAIN_NAME"\
-            --extra-vars "dockerhub_username=$DOCKERHUB_USERNAME"\
-            --extra-vars "dockerhub_token=$DOCKERHUB_TOKEN"\
-            --extra-vars "enable_ssl=$ENABLE_SSL"\
+          ansible-playbook -i inventory \
+            --extra-vars "image_name=$IMAGE_NAME" \
+            --extra-vars "domain_name=$DOMAIN_NAME" \
+            --extra-vars "dockerhub_username=$DOCKERHUB_USERNAME" \
+            --extra-vars "dockerhub_token=$DOCKERHUB_TOKEN" \
+            --extra-vars "enable_ssl=$ENABLE_SSL" \
             devops/playbook.yml   
