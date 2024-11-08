@@ -17,7 +17,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+    needs: build
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -45,12 +45,11 @@ jobs:
         run: |
           echo "$SSH_PRIVATE_KEY " > private.key
           chmod 600 private.key
-          eval 'ssh-agent -s'
-          ssh-add private.key
           mkdir -p ~/.ssh
           touch ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts\
           ssh-keyscan $SSH_HOST >>~/.ssh/known_hosts
+
       - name: Setup Ansible
         run: |
           sudo apt update
