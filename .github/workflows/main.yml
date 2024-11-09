@@ -59,7 +59,8 @@ jobs:
         
       - name: Create Ansible inventory
         run: |
-          echo "server ansible_host=$SSH_HOST ansible_user=$SSH_USERNAME ansible_ssh_private_key=private.key"> inventory
+          echo "server ansible_host=$SSH_HOST ansible_user=$SSH_USERNAME ansible_ssh_private_key_file=private.key" > inventory
+
       
       - name: Install Ansible roles
         run: |
