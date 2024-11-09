@@ -83,7 +83,7 @@
       - name: Check if Nginx configuratoin exists
         stat:
           path: "{{ NGINX_CONFIG_FILE }}"
-          
+        register: nginx_config
 
       - name: Nginx configureation
         template:
