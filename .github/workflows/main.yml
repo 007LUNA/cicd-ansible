@@ -43,7 +43,7 @@ jobs:
       
       - name: Create SSH Key
         run: |
-          echo "$SSH_PRIVATE_KEY " > private.key
+          echo "$SSH_PRIVATE_KEY" > private.key
           chmod 600 private.key
           mkdir -p ~/.ssh
           touch ~/.ssh/known_hosts
