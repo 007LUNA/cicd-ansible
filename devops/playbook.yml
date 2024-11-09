@@ -71,7 +71,7 @@
           state: started
           restart_policy: always
           ports:
-            - "{{ APP_PORT }}:3010"
+            - "{{ APP_PORT }}:8080"
           
       - name: Wait for Docker container to start
         wait_for:
