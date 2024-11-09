@@ -10,6 +10,7 @@
     NGINX_CONFIG_FILE: /etc/nginx/sites-available/{{ DOMAIN_NAME }}.conf
     NGINX_ENABLED_FILE: /etc/nginx/sites-enabled/{{ DOMAIN_NAME }}.conf
     ENABLE_SSL: "{{ enable_ssl }}"
+    APP_PORT: 3000
   tasks:
       - name: Configure swap
         include_role:
