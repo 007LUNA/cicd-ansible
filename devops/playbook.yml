@@ -10,7 +10,7 @@
     NGINX_CONFIG_FILE: /etc/nginx/sites-available/{{ DOMAIN_NAME }}.conf
     NGINX_ENABLED_FILE: /etc/nginx/sites-enabled/{{ DOMAIN_NAME }}.conf
     ENABLE_SSL: "{{ enable_ssl }}"
-    APP_PORT: 3001
+    APP_PORT: 3005
   tasks:
       - name: Configure swap
         include_role:
@@ -71,7 +71,7 @@
           state: started
           restart_policy: always
           ports:
-            - "{{ APP_PORT }}:3005"
+            - "{{ APP_PORT }}:3000"
           
       - name: Wait for Docker container to start
         wait_for:
