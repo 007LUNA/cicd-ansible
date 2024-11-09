@@ -1,5 +1,5 @@
 ---
-- name: Deploy Netxt.js DOcker container
+- name: Deploy Netxt.js Docker container
   hosts: all
   become: yes #run as Root
   vars: 
@@ -10,8 +10,7 @@
     NGINX_CONFIG_FILE: /etc/nginx/sites-available/{{ DOMAIN_NAME }}.conf
     NGINX_ENABLED_FILE: /etc/nginx/sites-enabled/{{ DOMAIN_NAME }}.conf
     ENABLE_SSL: "{{ enable_ssl }}"
-    tasks:
-
+  tasks:
       - name: Configure swap
         include_role:
           name: geerlingguy.swap
@@ -102,7 +101,7 @@
         command: "certbot --nginx -d {{ DOMAIN_NAME }} -n --agree-tos --email {{ email }}"
         when: ENABLE_SSL == "true"
          
-    handlers:
+  handlers:
       - name: Restart Nginx
         service:
           name: nginx
