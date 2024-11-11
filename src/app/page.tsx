@@ -9,7 +9,7 @@ export default function Home() {
         <p className="mt-4 text-lg text-gray-700 dark:text-gray-300">We provide tools, learning resources, and a community to help you succeed.</p>
         <Image
           src="/public/signature.png"
-          alt="devKtOps Logo"
+          alt="My Logo"
           width={200}
           height={200}
           className="mt-8 mx-auto rounded"
@@ -52,7 +52,7 @@ export default function Home() {
       </section>
 
       <footer className="w-full text-center">
-        <p className="text-gray-700 dark:text-gray-300">Powered by devKtOps © 2024</p>
+        <p className="text-gray-700 dark:text-gray-300">Powered by Me © 2024</p>
       </footer>
     </main>
   );
