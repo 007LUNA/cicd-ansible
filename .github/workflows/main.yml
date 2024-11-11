@@ -33,7 +33,7 @@ jobs:
         run: docker build -t $IMAGE_NAME:v1 .
       
       - name: Push Docker image
-        run: docker push $IMAGE_NAME
+        run: docker push $IMAGE_NAME:v1
 
   deploy:
     runs-on: ubuntu-latest
