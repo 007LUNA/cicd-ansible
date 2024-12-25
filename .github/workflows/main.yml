@@ -27,10 +27,10 @@ jobs:
           echo $DOCKERHUB_TOKEN | docker login -u $DOCKERHUB_USERNAME --password-stdin
           
       - name: Build Docker image
-        run: docker build -t $IMAGE_NAME:v1 .
+        run: docker build -t $IMAGE_NAME .
       
       - name: Push Docker image
-        run: docker push $IMAGE_NAME:v1
+        run: docker push $IMAGE_NAME
 
   deploy:
     runs-on: ubuntu-latest
