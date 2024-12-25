@@ -10,7 +10,7 @@ export default function Home() {
         <Image
           src="/devops.jpg"
           alt="My Logo"
-          width={600}
+          width={700}
           height={600}
           className="mt-8 mx-auto rounded"
         />
