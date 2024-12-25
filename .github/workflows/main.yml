@@ -25,10 +25,7 @@ jobs:
       - name: Login to DockerHub
         run: |
           echo $DOCKERHUB_TOKEN | docker login -u $DOCKERHUB_USERNAME --password-stdin
-
-      # - name: Build and push Docker images
-      #   uses: docker/build-push-action@v6.9.0
-                 
+          
       - name: Build Docker image
         run: docker build -t $IMAGE_NAME:v1 .
       
@@ -74,4 +71,4 @@ jobs:
             --extra-vars "dockerhub_username=$DOCKERHUB_USERNAME" \
             --extra-vars "dockerhub_token=$DOCKERHUB_TOKEN" \
             --extra-vars "enable_ssl=$ENABLE_SSL" \
-            devops/playbook.yml   
+            devops/playbook.yml
