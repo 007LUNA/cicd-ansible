@@ -20,14 +20,17 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: action/checkout@v2
+        uses: actions/checkout@v2
+
       - name: Login to DockerHub
-        uses: |
-          echo DOCKERHUB_TOKEN | docker login -u DOCKERHUB_USERNAME --passwd-sdtin
+        run: |
+          echo $DOCKERHUB_TOKEN | docker login -u $DOCKERHUB_USERNAME --password-stdin
+          
       - name: Build Docker image
-        run: docker build -t $IMAGE_NAME:latest .
+        run: docker build -t $IMAGE_NAME:v1 .
+      
       - name: Push Docker image
-        run: docker push $IMAGE_NAME:latest
+        run: docker push $IMAGE_NAME:v1
 
   deploy:
     runs-on: ubuntu-latest
@@ -37,13 +40,15 @@ jobs:
       
       - name: Create SSH Key
         run: |
-          echo "$SSH_PRIVATE_KEY " > private.key
+          echo "$SSH_PRIVATE_KEY" > private.key
           chmod 600 private.key
-          eval 'ssh-agent -s'
-          ssh-add private.keymkdir -p ~/.ssh
+          mkdir -p ~/.ssh
           touch ~/.ssh/known_hosts
-          chmod 644 ~/.ssh/known_hosts\
-          ssh-keyscan $SSH_HOST >>~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+          ssh-keyscan $SSH_HOST >> ~/.ssh/known_hosts
+          eval "$(ssh-agent -s)"
+          ssh-add private.key
+
       - name: Setup Ansible
         run: |
           sudo apt update
@@ -51,15 +56,19 @@ jobs:
         
       - name: Create Ansible inventory
         run: |
-          echo "server ansible_host=$SSH_HOST ansible_user=SSH_USERNAME ansible_ssh_private_key=private.key"> inventory
+          echo "server ansible_host=$SSH_HOST ansible_user=$SSH_USERNAME ansible_ssh_private_key_file=private.key" > inventory
+
       
+      - name: Install Ansible roles
+        run: |
+          ansible-galaxy install geerlingguy.swap
+
       - name: Run Ansible playbook
         run: |
           ansible-playbook -i inventory \
-            --extra-vars "image_name=$IMAGE_NAME"\
-            --extra-vars "domain_name=$DOMAIN_NAME"\
-            --extra-vars "dockerhub_username=$DOCKERHUB_USERNAME"\
-            --extra-vars "dockerhub_token=$DOCKERHUB_TOKEN"\
-            --extra-vars "enable_ssl=$ENABLE_SSL"\
-            devops/playbook
-        
+            --extra-vars "image_name=$IMAGE_NAME" \
+            --extra-vars "domain_name=$DOMAIN_NAME" \
+            --extra-vars "dockerhub_username=$DOCKERHUB_USERNAME" \
+            --extra-vars "dockerhub_token=$DOCKERHUB_TOKEN" \
+            --extra-vars "enable_ssl=$ENABLE_SSL" \
+            devops/playbook.yml

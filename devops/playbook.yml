@@ -1,5 +1,5 @@
 ---
-- name: Deploy Netxt.js DOcker container
+- name: Deploy Netxt.js Docker container
   hosts: all
   become: yes #run as Root
   vars: 
@@ -9,10 +9,9 @@
     DOMAIN_NAME: "{{ domain_name }}" #mikelab.thixpin.me
     NGINX_CONFIG_FILE: /etc/nginx/sites-available/{{ DOMAIN_NAME }}.conf
     NGINX_ENABLED_FILE: /etc/nginx/sites-enabled/{{ DOMAIN_NAME }}.conf
-    ENABLE_SSL: if "{{ enable_ssl }}" == "true" else false
-    APP_PORT: 3000
-    tasks:
-
+    ENABLE_SSL: "{{ enable_ssl }}"
+    APP_PORT: 3005
+  tasks:
       - name: Configure swap
         include_role:
           name: geerlingguy.swap
@@ -24,19 +23,20 @@
         apt: 
           update_cache: yes
 
-      - name: Install DOcker
+      - name: Install Docker
         apt:
           name: docker.io
           state: present
 
       - name: Start Docker service
         service:
+          name: docker
           state: started
           enabled: yes
       
       - name: Install Nginx
         apt:
-          name: Nginx
+          name: nginx
           state: present
 
       - name: Enable and start Nginx
@@ -49,7 +49,7 @@
         apt:
           name: "{{ item }}"
           state: present
-        when: ENABLE_SSL
+        when: ENABLE_SSL == "true"
         with_items:
             - certbot
             - python3-certbot-nginx
@@ -61,7 +61,7 @@
       
       - name: Pull Docker image_name
         docker_image:
-          name: "{{ IMAGE_NAME }}"
+          name: "{{ IMAGE_NAME }}:v1"
           source: pull
       
       - name: Run Docker container
@@ -72,10 +72,8 @@
           restart_policy: always
           ports:
             - "{{ APP_PORT }}:3000"
-          env:
-            - NODE_ENV=prodution
-            - PORT=3000
-      - name: Wit for Docker container to start
+          
+      - name: Wait for Docker container to start
         wait_for:
           host: localhost
           port: "{{ APP_PORT }}"
@@ -85,7 +83,7 @@
       - name: Check if Nginx configuratoin exists
         stat:
           path: "{{ NGINX_CONFIG_FILE }}"
-          
+        register: nginx_config
 
       - name: Nginx configureation
         template:
@@ -103,9 +101,9 @@
       
       - name: Install SSL certificate
         command: "certbot --nginx -d {{ DOMAIN_NAME }} -n --agree-tos --email {{ email }}"
-        when: ENABLE_SSL
+        when: ENABLE_SSL == "true"
          
-    handlers:
+  handlers:
       - name: Restart Nginx
         service:
           name: nginx

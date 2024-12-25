@@ -4,12 +4,12 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-gray-50 dark:bg-gray-900">
       <header className="w-full text-center">
-        <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100">Welcome to devKtOps</h1>
+        <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100">Welcome to My WEB1</h1>
         <p className="mt-4 text-lg text-gray-700 dark:text-gray-300">Empowering DevOps for your organization</p>
         <p className="mt-4 text-lg text-gray-700 dark:text-gray-300">We provide tools, learning resources, and a community to help you succeed.</p>
         <Image
-          src="/devktops.jpeg"
-          alt="devKtOps Logo"
+          src="/public/signature.png"
+          alt="My Logo"
           width={200}
           height={200}
           className="mt-8 mx-auto rounded"
@@ -52,7 +52,7 @@ export default function Home() {
       </section>
 
       <footer className="w-full text-center">
-        <p className="text-gray-700 dark:text-gray-300">Powered by devKtOps © 2024</p>
+        <p className="text-gray-700 dark:text-gray-300">Powered by Me © 2024</p>
       </footer>
     </main>
   );
