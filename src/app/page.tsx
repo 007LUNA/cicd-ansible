@@ -4,14 +4,14 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24 bg-gray-50 dark:bg-gray-900">
       <header className="w-full text-center">
-        <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100">Welcome to My WEB1</h1>
+        <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100">This is for <i><b>GitHub</b></i></h1>
         <p className="mt-4 text-lg text-gray-700 dark:text-gray-300">Empowering DevOps for your organization</p>
         <p className="mt-4 text-lg text-gray-700 dark:text-gray-300">We provide tools, learning resources, and a community to help you succeed.</p>
         <Image
-          src="/devops.jpg"
+          src="/github.png"
           alt="My Logo"
-          width={700}
-          height={600}
+          width={500}
+          height={500}
           className="mt-8 mx-auto rounded"
         />
       </header>
