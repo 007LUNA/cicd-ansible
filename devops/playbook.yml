@@ -61,7 +61,7 @@
       
       - name: Pull Docker image_name
         docker_image:
-          name: "{{ IMAGE_NAME }}:v1"
+          name: "{{ IMAGE_NAME }}"
           source: pull
       
       - name: Run Docker container
