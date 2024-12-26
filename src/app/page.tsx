@@ -8,7 +8,7 @@ export default function Home() {
         <p className="mt-4 text-lg text-gray-700 dark:text-gray-300">Empowering DevOps for your organization</p>
         <p className="mt-4 text-lg text-gray-700 dark:text-gray-300">We provide tools, learning resources, and a community to help you succeed.</p>
         <Image
-          src="/github.png"
+          src="/github1.png"
           alt="My Logo"
           width={500}
           height={500}
